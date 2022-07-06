@@ -3,6 +3,8 @@ from flask import Flask
 from app_config import AppConfig
 # Database
 from apps.database import db
+# Models
+from apps.deliveries.models import *
 # Blueprints
 from apps.deliveries.controllers import deliveries
 
