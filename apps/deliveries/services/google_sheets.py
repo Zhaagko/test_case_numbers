@@ -5,8 +5,13 @@ from string import ascii_uppercase as alph_upper
 class GoogleSheet:
 
     def __init__(self, sheet_name: str, table_name: str):
+        self._sheet_name = sheet_name
+        self._table_name = table_name
         self._account = gspread.service_account(filename="service_account.json")
         self._sheet = self._account.open(table_name).worksheet(sheet_name)
+
+    def update(self):
+        self._sheet = self._account.open(self._table_name).worksheet(self._sheet_name)
 
     def extract_table(self):
         first_row = 1
