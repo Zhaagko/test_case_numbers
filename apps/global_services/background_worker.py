@@ -9,12 +9,7 @@ class Worker:
     def add_task(self, name: str, func, args: tuple):
         self._tasks[name] = (func, args)
 
-    def run(self):
+    def start(self):
         for task in self._tasks.keys():
             func, args = self._tasks[task]
             Thread(name=task, target=func, args=args).start()
-
-
-if __name__ == "__main__":
-    worker = Worker()
-    worker.run()

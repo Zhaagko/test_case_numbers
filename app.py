@@ -1,14 +1,8 @@
 from apps import create_app
-from apps.global_services.background_worker import Worker
+from apps.global_services import create_worker
 
-# Init background worker
-worker = Worker()
-# Add global tasks to worker
-#
-# Tasks
-#
-# Run worker
-worker.run()
+worker = create_worker()
+worker.start()
 
 if __name__ == "__main__":
     app = create_app()
