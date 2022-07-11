@@ -7,6 +7,10 @@ from apps.database import db
 from apps.deliveries.models import *
 # Blueprints
 from apps.deliveries.controllers import deliveries
+# RestApi
+from apps.restapi import restapi
+# Rest Resources
+from apps.deliveries.controllers import DeliveriesRest
 
 
 def create_app():
@@ -18,5 +22,10 @@ def create_app():
 
     with app.app_context():
         db.create_all()
+
+    # Add RestApi resources
+    restapi.add_resource(DeliveriesRest, "/api")
+    # Init Flask-app in RestApi
+    restapi.init_app(app)
 
     return app
