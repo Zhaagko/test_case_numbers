@@ -10,7 +10,7 @@ from apps.deliveries.controllers import deliveries
 # RestApi
 from apps.restapi import restapi
 # Rest Resources
-from apps.deliveries.controllers import DeliveriesRest
+from apps.deliveries.rest import DeliveriesRest
 
 
 def create_app():
