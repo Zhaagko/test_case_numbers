@@ -17,7 +17,12 @@ def update_delivery_database(app, freq_sec: int):
 
                 new_rows = []
 
-                for row in sheet.extract_table():
+                sheets_rows = sheet.extract_table()
+                if len(sheets_rows) == 0:
+                    sleep(5)
+                    continue
+
+                for row in sheets_rows:
                     usd = float(row[1])
                     delivery = Delivery(number=row[0],
                                         cost_usd=usd,
