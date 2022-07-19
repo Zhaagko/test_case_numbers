@@ -1,4 +1,6 @@
 from apps.database import db
+from sqlalchemy import func
+import datetime
 
 
 class Delivery(db.Model):
@@ -10,3 +12,7 @@ class Delivery(db.Model):
 
     def __repr__(self):
         return self.number
+
+    @staticmethod
+    def get_overdue():
+        return Delivery.query.filter(func.date(Delivery.term) < datetime.date.today()).all()
