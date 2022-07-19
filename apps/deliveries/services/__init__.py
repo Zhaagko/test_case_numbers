@@ -13,24 +13,28 @@ def update_delivery_database(app, freq_sec: int):
             try:
                 usd_rate = get_rate()
 
-                Delivery.query.delete()
-                db.session.commit()
+                cur_rows = Delivery.query.all()
 
-                rows_to_insert = list()
+                new_rows = []
 
                 for row in sheet.extract_table():
                     usd = float(row[1])
-                    rows_to_insert.append(Delivery(number=row[0],
-                                                   cost_usd=usd,
-                                                   cost_rub=round(usd * usd_rate, 2),
-                                                   term="-".join(reversed(row[2].split(".")))
-                                                   )
-                                          )
+                    delivery = Delivery(number=row[0],
+                                        cost_usd=usd,
+                                        cost_rub=round(usd * usd_rate, 2),
+                                        term="-".join(reversed(row[2].split(".")))
+                                        )
 
-                db.session.add_all(rows_to_insert)
-                db.session.commit()
+                    if delivery not in cur_rows:
+                        db.session.add(delivery)
+                        db.session.commit()
 
-                print("Delivery-DB has been successfully updated!")
+                    new_rows.append(delivery)
+
+                for row in cur_rows:
+                    if row not in new_rows:
+                        db.session.query(Delivery).filter(Delivery.id == row.id).delete()
+                        db.session.commit()
 
                 sleep(freq_sec)
             except:
