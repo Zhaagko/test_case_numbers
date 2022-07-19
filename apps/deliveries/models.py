@@ -15,4 +15,4 @@ class Delivery(db.Model):
 
     @staticmethod
     def get_overdue():
-        return Delivery.query.filter(func.date(Delivery.term) < datetime.date.today()).all()
+        return Delivery.query.filter(func.date(Delivery.term) < datetime.date.today()).order_by(Delivery.term).all()
