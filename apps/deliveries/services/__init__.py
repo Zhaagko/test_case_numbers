@@ -18,23 +18,29 @@ def update_delivery_database(app, freq_sec: int):
                 new_rows = []
 
                 sheets_rows = sheet.extract_table()
+
                 if len(sheets_rows) == 0:
                     sleep(5)
                     continue
 
                 for row in sheets_rows:
                     usd = float(row[1])
-                    delivery = Delivery(number=row[0],
-                                        cost_usd=usd,
-                                        cost_rub=round(usd * usd_rate, 2),
-                                        term="-".join(reversed(row[2].split(".")))
-                                        )
+                    delivery = dict(number=row[0],
+                                    cost_usd=usd,
+                                    cost_rub=round(usd * usd_rate, 2),
+                                    term="-".join(reversed(row[2].split("."))))
 
-                    if delivery not in cur_rows:
-                        db.session.add(delivery)
-                        db.session.commit()
+                    if delivery not in new_rows:
+                        new_rows.append(delivery)
+                        delivery = Delivery(number=delivery["number"],
+                                            cost_usd=delivery["cost_usd"],
+                                            cost_rub=delivery["cost_rub"],
+                                            term=delivery["term"]
+                                            )
 
-                    new_rows.append(delivery)
+                        if delivery not in cur_rows:
+                            db.session.add(delivery)
+                            db.session.commit()
 
                 for row in cur_rows:
                     if row not in new_rows:
